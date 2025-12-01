@@ -1,7 +1,47 @@
 import Table from "./Table"
 import Form from "./Form"
-import {useState} from 'react'
+import {useState, useEffect} from 'react'
+
 function LinkContainer() {
+
+    const fetchLinks = async () => {
+
+        try {
+            let response = await fetch ('/links')
+            console.log(response)
+            let data = await response.json()
+            setFavLinks(data)
+            console.log(data)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    const postLink = async() => {
+        let testLink = {
+            name: "test",
+            URL: "test.com"
+        }
+
+        try {
+            let response = await fetch('/new', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(testLink)
+            })
+            console.log(response)
+            let message = await response.text()
+            console.log(message)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    useEffect( () => {
+        fetchLinks()
+    }, [])
 
     const[favLinks, setFavLinks] = useState([])
 

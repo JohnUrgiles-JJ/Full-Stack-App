@@ -1,9 +1,8 @@
 const POOL = require('pg').Pool
-require('dotenv').config()
 
 const pool = new POOL({
     user: process.env.DB_USER,
-    host: process.env.D_HOST,
+    host: process.env.DB_HOST,
     database: process.env.DB_DATABASE,
     password: process.env.DB_PASSWORD,
     port: parseInt(process.env.DB_PORT)
@@ -20,23 +19,15 @@ const getLinks = (req, res) => {
     })
 }
 
-const getLinksById = (request, response) => {
-    const id = parseInt(request.params.id)
-  
-    pool.query('SELECT * FROM links WHERE id = $1', [id], (error, results) => {
-      if (error) {
-        throw error
-      }
-      response.status(200).json(results.rows)
-    })
-  }
   
 const createLinks = (request, response) => {
-    const { name, email } = request.body
+    const name = request.body.name
+    const URL = request.body.URL
 
-    pool.query('INSERT INTO links (name, email) VALUES ($1, $2) RETURNING *', [name, email], (error, results) => {
+
+    pool.query('INSERT INTO links (name, URL) VALUES ($1, $2) RETURNING *', [name, URL], (error, results) => {
         if (error) {
-        throw error
+            throw error
         }
         response.status(201).send(`Link added with ID: ${results.rows[0].id}`)
     })
@@ -44,10 +35,11 @@ const createLinks = (request, response) => {
   
 const updateLinks = (request, response) => {
     const id = parseInt(request.params.id)
-    const { name, email } = request.body
+    const { name, URL } = request.body
 
     pool.query(
-        'UPDATE links SET name = $1, email = $2 WHERE id = $3', [name, email, id],
+        'UPDATE links SET name = $1, URL = $2 WHERE id = $3', 
+        [name, URL, id],
         (error, results) => {
         if (error) {
             throw error
@@ -70,7 +62,6 @@ const deleteLinks = (request, response) => {
 
 module.exports = {
     getLinks,
-    getLinksById,
     createLinks,
     updateLinks,
     deleteLinks,
