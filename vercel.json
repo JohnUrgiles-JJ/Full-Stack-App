@@ -3,19 +3,14 @@
     "buildCommand": "cd client && npm install && npm run build",
     "outputDirectory": "client/dist",
     "installCommand": "npm install",
-    "functions": {
-      "server/index.js": {
-        "runtime": "nodejs18.x"
-      }
-    },
-        "rewrites": [
-          {
-            "source": "/api/(.*)",
-            "destination": "/server/index.js"
-          },
-          {
-            "source": "/(.*)",
-            "destination": "/client/dist/$1"
-          }
-        ]
-      }
+    "rewrites": [
+      {
+        "source": "/api/(.*)",
+        "destination": "/server/index.js"
+      },
+      {
+        "source": "/(.*)",
+        "destination": "/client/dist/$1"
+    }
+    ]
+}
